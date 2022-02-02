@@ -1,1 +1,3 @@
 network_file_no1.net
+backend/network_backend/db.sqlite3
+backend/network_backend/network_backend/__pycache__
