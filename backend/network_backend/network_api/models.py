@@ -2,10 +2,21 @@ from django.db import models
 
 # Create your models here.
 
+INITIAL_RELATION_NAME = 'attend\n'
+INITIAL_NETWORK_ID = 'UP000315683'
+
+class Relation(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.name)
+
 class Friend(models.Model):
     id = models.BigAutoField(primary_key=True)
+    network_id = models.CharField(max_length=11, unique=True)
+    relations = models.ManyToManyField(Relation)
     def __str__(self):
-        return str(self.id)
+        return str(self.network_id)
 
 class Person(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -13,31 +24,27 @@ class Person(models.Model):
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     friends = models.ManyToManyField(Friend)
+    relations = models.ManyToManyField(Relation)
 
     def __str__(self):
         return str(self.name) + ' ' + str(self.surname)
 
-INITIAL_NETWORK_ID = 'UP000315683'
+def init_relations_data():
+    print('init relations data...')
 
-def init_person_data():
-    f = Friend(id = 98000263435)
-    f.save()
+    with open('verbs.txt', 'r') as file:
+        verbs = file.readlines()
 
-    p = Person(id = 98000315683, network_id = INITIAL_NETWORK_ID, 
-    name = 'Jan', surname = 'Kowalski')
-    p2 = Person(id = 98000263435, network_id = 'UP000263435', name = 'Ania', surname = 'Kowalska')
+    for verb in verbs:
+        relation = Relation(name = verb)
+        relation.save()
 
-    p.save()
-    p2.save()
-
-    p.friends.add(f)
-
-    p.save()
+def init_data():
+    RELATION_DATA_EXIST = Relation.objects.filter(name = INITIAL_RELATION_NAME).exists()
+    if not RELATION_DATA_EXIST:
+        init_relations_data()
 
 try:
-    DATA_EXIST = Person.objects.filter(network_id = INITIAL_NETWORK_ID).exists()
-    if not DATA_EXIST:
-        print('init persons data')
-        init_person_data()
+    init_data()
 except:
-    print('init database')
+    print('init database...')
