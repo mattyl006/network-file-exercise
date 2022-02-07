@@ -3,3 +3,4 @@ backend/network_backend/db.sqlite3
 backend/network_backend/network_backend/__pycache__
 backend/network_backend/network_api/__pycache__
 relations.txt
+networkIds.txt

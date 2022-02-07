@@ -2,20 +2,36 @@
 
 import re
 
+with open('network_file_no1.net', 'r') as file:
+        DATA = file.read().replace('\n', ' | ')
+
 def getRelations():
-    with open('network_file_no1.net', 'r') as file:
-        data = file.read().replace('\n', ' | ')
-        allRelations = re.findall(r'[0-9]+ \|', data)
-        relations = set()
-        for relation in allRelations:
-            relations.add(int(relation[0:-2]))
-        return relations
+    allRelations = re.findall(r'[0-9]+ \|', DATA)
+    relations = set()
+    for relation in allRelations:
+        relations.add(int(relation[0:-2]))
+    return relations
 
-relations = getRelations()
+def getNetworkIds():
+    allNetworkIds = re.findall(r'UP[0-9]*[0-9]\t', DATA)
+    networkIds = set()
+    for id in allNetworkIds:
+        networkIds.add(id[0:-1])
+    return networkIds
 
-relationsFile = open("relations.txt", "x")
+def generateRelations():
+    relations = getRelations()
+    relationsFile = open("relations.txt", "x")
+    for r in relations:
+        relationsFile.write(str(r) + '\n')
+    print('\n relations file generated!')
 
-for r in relations:
-    relationsFile.write(str(r) + '\n')
+def generateNetworkIds():
+    networkIds = getNetworkIds()
+    networkIdsFile = open("networkIds.txt", "x")
+    for n in networkIds:
+        networkIdsFile.write(str(n) + '\n')
+    print('\n network ids file generated!')
 
-print('\n relations file generated!')
+generateRelations()
+generateNetworkIds()
