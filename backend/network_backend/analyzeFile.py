@@ -15,6 +15,8 @@ for relation in allRelations:
 print('\nRelations: ' + str(relations))
 print('\nCount of relations: ' + str(len(relations)) + '\n')
 
+print(data[0:1000])
+
 allElements = re.findall(r'UP[0-9]*[0-9]\t', data)
 
 elements = set()
@@ -24,3 +26,14 @@ for element in allElements:
 
 print('\nExample elements: ' + str(elements)[0:1005])
 print('\nCount of elements: ' + str(len(elements)) + '\n')
+
+elementsAndHisRelations = []
+i = 0
+for element in elements:
+    elementsAndHisRelations.append(set(re.findall(r'' + str(element) + r'\t[0-9]', data)))
+    i += 1
+    print(i)
+    if i == 4:
+        break
+
+print(elementsAndHisRelations)

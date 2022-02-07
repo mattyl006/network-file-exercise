@@ -52,6 +52,13 @@ def init_friends_data():
         for networkId in networkIds
     ])
 
+    # friends_relations = [(), (), ...]
+
+    # Friend.relations.through.objects.bulk_create([
+    #     Friend.relations.through(friend_id = f_id, relation_id = r_id)
+    #     for (f_id, r_id) in friends_relations
+    # ])
+
 def init_data():
     RELATION_DATA_EXIST = Relation.objects.filter(name = INITIAL_RELATION_NAME).exists()
     FRIENDS_DATA_EXIST = Friend.objects.filter(network_id = INITIAL_NETWORK_ID).exists()
