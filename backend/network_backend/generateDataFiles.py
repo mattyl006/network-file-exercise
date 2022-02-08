@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
-import re
+import re2 as re
+import names
 
-with open('network_file_no1.net', 'r') as file:
+with open('data_files/network_file_no1.net', 'r') as file:
         DATA = file.read().replace('\n', ' | ')
 
 def getRelations():
@@ -19,19 +20,29 @@ def getNetworkIds():
         networkIds.add(id[0:-1])
     return networkIds
 
-def generateRelations():
-    relations = getRelations()
-    relationsFile = open("relations.txt", "x")
+def generateRelations(relations):
+    relationsFile = open("data_files/relations.txt", "x")
     for r in relations:
         relationsFile.write(str(r) + '\n')
     print('\n relations file generated!')
 
-def generateNetworkIds():
-    networkIds = getNetworkIds()
-    networkIdsFile = open("networkIds.txt", "x")
+def generateNetworkIds(networkIds):
+    networkIdsFile = open("data_files/networkIds.txt", "x")
     for n in networkIds:
         networkIdsFile.write(str(n) + '\n')
     print('\n network ids file generated!')
 
-generateRelations()
-generateNetworkIds()
+def generateNames(networkIds):
+    namesOfElements = set()
+    while len(namesOfElements) != len(networkIds):
+        namesOfElements.add(names.get_first_name() + ' ' + names.get_last_name())
+    personsFile = open("data_files/persons.txt", "x")
+    for n in namesOfElements:
+        personsFile.write(str(n) + '\n')
+    print('\n persons names generated!')
+
+relations = getRelations()
+networkIds = getNetworkIds()
+generateRelations(relations)
+generateNetworkIds(networkIds)
+generateNames(networkIds)
