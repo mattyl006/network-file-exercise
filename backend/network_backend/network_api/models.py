@@ -87,7 +87,27 @@ def init_persons_data():
     else:
         print('ERROR: persons.txt has not the same count of elements like networkIds.txt')
 
+def init_persons_relations_association():
+    print('init persons <-> relations associations...')
+    with open('data_files/network_file_no1.net', 'r') as file:
+        data = file.read().replace('\n', ' | ')
+    relations = set(re.findall(r'[0-9]+ \|', data))
+    persons_relations = []
+    i = 0
+    for relation in relations:
+        elementAndHisRelations = (set(re.findall(r'(UP[0-9]*[0-9]\t)(?:UP[0-9]*[0-9]\t)(' + relation[:-2] + ')', data)))
+        for element in elementAndHisRelations:
+            item = (int('98' + element[0][2:11]), int(element[1]))
+            persons_relations.append(item)
+            i += 1
+            if i == 70000:
+                print("almost there...")
+    Person.relations.through.objects.bulk_create([
+        Person.relations.through(person_id = p_id, relation_id = r_id)
+        for (p_id, r_id) in persons_relations
+    ])
 
+    
 def init_data():
     RELATION_DATA_EXIST = Relation.objects.filter(name = INITIAL_RELATION_NAME).exists()
     FRIENDS_DATA_EXIST = Friend.objects.filter(network_id = INITIAL_NETWORK_ID).exists()
@@ -99,6 +119,7 @@ def init_data():
         init_friends_relations_association()
     if not PERSONS_DATA_EXIST:
         init_persons_data()
+        init_persons_relations_association()
 
 try:
     init_data()
